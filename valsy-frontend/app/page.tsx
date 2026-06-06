@@ -2,9 +2,10 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import ProductCard from "@/components/ProductCard";
 import { ArrowRight, Sparkles, ShieldCheck, Truck } from "lucide-react";
+import type { ProductDto } from "@/types";
 
 export default async function HomePage() {
-  let featuredProducts = [];
+  let featuredProducts: ProductDto[] = [];
   try {
     const all = await api.getProducts();
     featuredProducts = all.slice(0, 4);

@@ -89,17 +89,21 @@ export default function CheckoutPage() {
   }
 
   const fields = [
-    { section: "Personal", icon: <User className="w-4 h-4" />, items: [
-      { name: "firstName", label: "First Name", type: "text" },
-      { name: "lastName", label: "Last Name", type: "text" },
-      { name: "email", label: "Email Address", type: "email" },
-    ]},
-    { section: "Contact & Shipping", icon: <MapPin className="w-4 h-4" />, items: [
-      { name: "phoneNumber", label: "Phone Number", type: "tel" },
-      { name: "addressLine1", label: "Address", type: "text" },
-      { name: "city", label: "City", type: "text" },
-      { name: "country", label: "Country", type: "text" },
-    ]},
+    {
+      section: "Personal", icon: <User className="w-4 h-4" />, items: [
+        { name: "firstName", label: "First Name", type: "text" },
+        { name: "lastName", label: "Last Name", type: "text" },
+        { name: "email", label: "Email Address", type: "email" },
+      ]
+    },
+    {
+      section: "Contact & Shipping", icon: <MapPin className="w-4 h-4" />, items: [
+        { name: "phoneNumber", label: "Phone Number", type: "tel" },
+        { name: "addressLine1", label: "Address", type: "text" },
+        { name: "city", label: "City", type: "text" },
+        { name: "country", label: "Country", type: "text" },
+      ]
+    },
   ];
 
   return (
@@ -134,7 +138,7 @@ export default function CheckoutPage() {
                         <input
                           type={field.type}
                           name={field.name}
-                          value={(form as Record<string, string>)[field.name]}
+                          value={(form as unknown as Record<string, string>)[field.name]}
                           onChange={handleChange}
                           required
                           className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all"
