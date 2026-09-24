@@ -8,7 +8,7 @@ export default async function HomePage() {
   let featuredProducts: ProductDto[] = [];
   try {
     const all = await api.getProducts();
-    featuredProducts = all.slice(0, 4);
+    featuredProducts = all.products.slice(0, 4);
   } catch {
     // Backend may not be running
   }

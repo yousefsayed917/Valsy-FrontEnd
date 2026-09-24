@@ -1,6 +1,6 @@
-import type { ProductDto, OrderDto, CheckoutFormData } from "@/types";
+import type { ProductDto, OrderDto, CheckoutFormData, ProductCatalogDto } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5220";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7156";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
@@ -21,12 +21,19 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   // Store
-  getProducts: (searchTerm?: string): Promise<ProductDto[]> => {
-    const qs = searchTerm ? `?searchTerm=${encodeURIComponent(searchTerm)}` : "";
-    return request<ProductDto[]>(`/api/products${qs}`);
+  getProducts: (params?: { search?: string, size?: string, color?: string, minPrice?: number, maxPrice?: number }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.search) searchParams.append("searchTerm", params.search);
+    if (params?.size) searchParams.append("size", params.size);
+    if (params?.color) searchParams.append("color", params.color);
+    if (params?.minPrice) searchParams.append("minPrice", params.minPrice.toString());
+    if (params?.maxPrice) searchParams.append("maxPrice", params.maxPrice.toString());
+    
+    const query = searchParams.toString();
+    return request<ProductCatalogDto>(`/api/products${query ? `?${query}` : ""}`);
   },
 
-  getProductById: (id: string): Promise<ProductDto | null> =>
+  getProductById: (id: number): Promise<ProductDto | null> =>
     request<ProductDto>(`/api/products/${id}`),
 
   // Admin
@@ -39,27 +46,28 @@ export const api = {
     name: string,
     description: string,
     price: number,
-    requestedBy: string
-  ): Promise<{ productId: string }> =>
+    requestedBy: string,
+    variants: { size: string; color: string; stock: number; image?: string }[]
+  ): Promise<{ productId: number }> =>
     request("/api/admin/products", {
       method: "POST",
-      body: JSON.stringify({ name, description, price, requestedBy }),
+      body: JSON.stringify({ name, description, price, requestedBy, variants }),
     }),
 
   createProductVariant: (
-    productId: string,
+    productId: number,
     size: string,
     color: string,
     stock: number,
     requestedBy: string
-  ): Promise<{ variantId: string }> =>
+  ): Promise<{ variantId: number }> =>
     request(`/api/admin/products/${productId}/variants`, {
       method: "POST",
       body: JSON.stringify({ size, color, stock, requestedBy }),
     }),
 
   adjustStock: (
-    variantId: string,
+    variantId: number,
     newStock: number,
     requestedBy: string
   ): Promise<void> =>
@@ -73,7 +81,7 @@ export const api = {
   createCustomer: (
     data: CheckoutFormData,
     requestedBy: string
-  ): Promise<{ customerId: string }> =>
+  ): Promise<{ customerId: number }> =>
     request("/api/customers", {
       method: "POST",
       body: JSON.stringify({ ...data, requestedBy }),
@@ -82,13 +90,14 @@ export const api = {
   // ─── Orders ─────────────────────────────────────────────────────────────────
 
   createOrder: (
-    customerId: string,
+    customerId: number,
     shippingAddressLine1: string,
     shippingCity: string,
     shippingCountry: string,
     contactPhone: string,
-    requestedBy: string
-  ): Promise<{ orderId: string }> =>
+    requestedBy: string,
+    items: { productVariantId: number; quantity: number }[]
+  ): Promise<{ orderId: number }> =>
     request("/api/orders", {
       method: "POST",
       body: JSON.stringify({
@@ -98,13 +107,14 @@ export const api = {
         shippingCountry,
         contactPhone,
         requestedBy,
+        items,
       }),
     }),
 
   addOrderItem: (
-    orderId: string,
-    productId: string,
-    productVariantId: string,
+    orderId: number,
+    productId: number,
+    productVariantId: number,
     quantity: number,
     requestedBy: string
   ): Promise<void> =>
@@ -113,12 +123,12 @@ export const api = {
       body: JSON.stringify({ productId, productVariantId, quantity, requestedBy }),
     }),
 
-  submitOrder: (orderId: string, requestedBy: string): Promise<void> =>
+  submitOrder: (orderId: number, requestedBy: string): Promise<void> =>
     request(`/api/orders/${orderId}/submit`, {
       method: "POST",
       body: JSON.stringify({ requestedBy }),
     }),
 
-  getOrderById: (id: string): Promise<OrderDto> =>
+  getOrderById: (id: number): Promise<OrderDto> =>
     request<OrderDto>(`/api/orders/${id}`),
 };

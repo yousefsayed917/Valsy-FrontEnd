@@ -23,7 +23,7 @@ export default function ProductDetailPage() {
   useEffect(() => {
     if (!params?.id) return;
     api
-      .getProductById(params.id as string)
+      .getProductById(Number(params.id))
       .then((p) => {
         setProduct(p);
         if (p?.variants?.length) {

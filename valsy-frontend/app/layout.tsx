@@ -21,10 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-[#0a0a0f] text-slate-200 antialiased">
+      <body className="min-h-screen bg-[#0a0a0f] text-slate-200 antialiased overflow-x-hidden relative">
+        {/* Animated Background */}
+        <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[120px] animate-float-slow" />
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[120px] animate-float-slow-delay" />
+        </div>
         <CartProvider>
           <Navbar />
-          <main className="pt-16">{children}</main>
+          <main className="pt-16 relative z-0">{children}</main>
           <Footer />
           <ToastContainer />
         </CartProvider>

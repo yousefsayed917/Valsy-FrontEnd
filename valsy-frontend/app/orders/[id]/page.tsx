@@ -18,7 +18,7 @@ export default function OrderConfirmationPage() {
   useEffect(() => {
     if (!params?.id) return;
     api
-      .getOrderById(params.id as string)
+      .getOrderById(Number(params.id))
       .then(setOrder)
       .catch(() => setOrder(null))
       .finally(() => setLoading(false));
@@ -48,7 +48,7 @@ export default function OrderConfirmationPage() {
           <p className="text-gray-400">
             Thank you for your purchase. Order{" "}
             <span className="font-mono text-xs bg-white/5 px-2 py-0.5 rounded text-gray-300">
-              #{order.id.slice(0, 8).toUpperCase()}
+              #{order.id}
             </span>
           </p>
         </div>

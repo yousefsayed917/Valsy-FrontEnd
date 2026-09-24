@@ -23,7 +23,7 @@ const ADMIN_USER = "admin";
 
 export default function ProductVariantsPage() {
   const params = useParams();
-  const productId = params?.id as string;
+  const productId = Number(params?.id);
 
   const [product, setProduct] = useState<ProductDto | null>(null);
   const [loading, setLoading] = useState(true);

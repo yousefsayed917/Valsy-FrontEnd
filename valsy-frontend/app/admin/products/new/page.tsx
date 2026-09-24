@@ -62,11 +62,7 @@ export default function CreateProductPage() {
 
     setSubmitting(true);
     try {
-      const { productId } = await api.createProduct(name, description, priceNum, ADMIN_USER);
-
-      for (const v of filledVariants) {
-        await api.createProductVariant(productId, v.size.trim(), v.color.trim(), v.stock, ADMIN_USER);
-      }
+      const { productId } = await api.createProduct(name, description, priceNum, ADMIN_USER, filledVariants);
 
       showToast("success", `"${name}" created with ${filledVariants.length} variant(s)!`);
       router.push(`/admin/products/${productId}/variants`);

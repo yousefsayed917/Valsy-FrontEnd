@@ -1,14 +1,14 @@
 // ─── Product Types ─────────────────────────────────────────────────────────────
 
 export interface ProductVariantDto {
-  id: string;
+  id: number;
   size: string;
   color: string;
   stock: number;
 }
 
 export interface ProductDto {
-  id: string;
+  id: number;
   name: string;
   description: string;
   price: number;
@@ -20,10 +20,10 @@ export interface ProductDto {
 export type OrderStatus = "Pending" | "Paid" | "Shipped" | "Delivered" | "Cancelled";
 
 export interface OrderItemDto {
-  id: string;
-  orderId: string;
-  productId: string;
-  productVariantId: string;
+  id: number;
+  orderId: number;
+  productId: number;
+  productVariantId: number;
   productName: string;
   size: string;
   color: string;
@@ -33,8 +33,8 @@ export interface OrderItemDto {
 }
 
 export interface OrderDto {
-  id: string;
-  customerId: string;
+  id: number;
+  customerId: number;
   status: OrderStatus;
   shippingAddressLine1: string;
   shippingCity: string;
@@ -47,8 +47,8 @@ export interface OrderDto {
 // ─── Cart (client-side only) ───────────────────────────────────────────────────
 
 export interface CartItem {
-  productId: string;
-  productVariantId: string;
+  productId: number;
+  productVariantId: number;
   productName: string;
   size: string;
   color: string;
@@ -66,4 +66,16 @@ export interface CheckoutFormData {
   addressLine1: string;
   city: string;
   country: string;
+}
+
+export interface ProductFiltersDto {
+  sizes: string[];
+  colors: string[];
+  minPrice: number;
+  maxPrice: number;
+}
+
+export interface ProductCatalogDto {
+  products: ProductDto[];
+  filters: ProductFiltersDto;
 }

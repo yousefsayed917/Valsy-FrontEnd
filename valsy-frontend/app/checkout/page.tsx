@@ -41,28 +41,21 @@ export default function CheckoutPage() {
       // 1. Create customer
       const { customerId } = await api.createCustomer(form, SYSTEM_USER);
 
-      // 2. Create order
+      // 2. Create order with all items
       const { orderId } = await api.createOrder(
         customerId,
         form.addressLine1,
         form.city,
         form.country,
         form.phoneNumber,
-        SYSTEM_USER
+        SYSTEM_USER,
+        items.map(item => ({
+          productVariantId: item.productVariantId,
+          quantity: item.quantity
+        }))
       );
 
-      // 3. Add each cart item
-      for (const item of items) {
-        await api.addOrderItem(
-          orderId,
-          item.productId,
-          item.productVariantId,
-          item.quantity,
-          SYSTEM_USER
-        );
-      }
-
-      // 4. Submit order
+      // 3. Submit order
       await api.submitOrder(orderId, SYSTEM_USER);
 
       clearCart();

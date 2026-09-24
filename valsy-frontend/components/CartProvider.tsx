@@ -6,8 +6,8 @@ import type { CartItem } from "@/types";
 interface CartContextType {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (productVariantId: string) => void;
-  updateQuantity: (productVariantId: string, quantity: number) => void;
+  removeItem: (productVariantId: number) => void;
+  updateQuantity: (productVariantId: number, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -32,11 +32,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const removeItem = useCallback((productVariantId: string) => {
+  const removeItem = useCallback((productVariantId: number) => {
     setItems((prev) => prev.filter((i) => i.productVariantId !== productVariantId));
   }, []);
 
-  const updateQuantity = useCallback((productVariantId: string, quantity: number) => {
+  const updateQuantity = useCallback((productVariantId: number, quantity: number) => {
     if (quantity <= 0) {
       setItems((prev) => prev.filter((i) => i.productVariantId !== productVariantId));
     } else {
